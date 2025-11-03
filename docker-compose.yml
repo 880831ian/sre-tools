@@ -1,0 +1,27 @@
+services:
+  sre-tools:
+    build: .
+    ports:
+      - "3000:8080"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:80/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sre-tools.rule=Host(`sre-tools.yourdomain.com`)"
+      - "traefik.http.routers.sre-tools.tls=true"
+      - "traefik.http.routers.sre-tools.tls.certresolver=letsencrypt"

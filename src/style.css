@@ -1,0 +1,518 @@
+/* 自定義樣式 */
+.tool-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tool-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.category-section {
+  margin-bottom: 3rem;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 0;
+}
+
+.search-box {
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+/* 深色模式樣式 */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #1a1d29;
+  --bs-body-color: #e9ecef;
+  --bs-card-bg: #2c3e50;
+  --bs-border-color: #495057;
+}
+
+[data-bs-theme="dark"] .card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .tool-card:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+  border-color: #667eea;
+}
+
+[data-bs-theme="dark"] .navbar {
+  background-color: #2c3e50 !important;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .modal-content {
+  background-color: var(--bs-card-bg);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .form-control {
+  background-color: #34495e;
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .form-control:focus {
+  background-color: #34495e;
+  border-color: #667eea;
+  color: var(--bs-body-color);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+[data-bs-theme="dark"] .btn-primary {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary {
+  color: #667eea;
+  border-color: #667eea;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+[data-bs-theme="dark"] .text-muted {
+  color: #adb5bd !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-light {
+  background-color: #495057 !important;
+  color: #e9ecef !important;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2rem 0;
+  }
+  
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .search-box {
+    margin: 1rem auto;
+  }
+  
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  
+  .modal-xl {
+    max-width: calc(100vw - 1rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .col-sm-6 {
+    margin-bottom: 1rem;
+  }
+  
+  .category-section {
+    margin-bottom: 2rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+}/* 工
+具組件深色模式樣式 */
+[data-bs-theme="dark"] .diff-add {
+  background-color: #1e4620;
+  color: #4ade80;
+}
+
+[data-bs-theme="dark"] .diff-delete {
+  background-color: #4c1d1d;
+  color: #f87171;
+}
+
+[data-bs-theme="dark"] .diff-equal {
+  background-color: transparent;
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .diff-empty {
+  background-color: #374151;
+  color: transparent;
+}
+
+[data-bs-theme="dark"] .bg-light {
+  background-color: #374151 !important;
+  color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme="dark"] .bg-success-lt {
+  background-color: #1e4620 !important;
+  color: #4ade80 !important;
+}
+
+[data-bs-theme="dark"] .alert-success {
+  background-color: #1e4620;
+  border-color: #22c55e;
+  color: #4ade80;
+}
+
+[data-bs-theme="dark"] .alert-warning {
+  background-color: #451a03;
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+[data-bs-theme="dark"] .alert-danger {
+  background-color: #4c1d1d;
+  border-color: #ef4444;
+  color: #f87171;
+}
+
+[data-bs-theme="dark"] .table {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .table th,
+[data-bs-theme="dark"] .table td {
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .badge.bg-blue {
+  background-color: #1e40af !important;
+  color: #93c5fd !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-green {
+  background-color: #166534 !important;
+  color: #4ade80 !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-red {
+  background-color: #991b1b !important;
+  color: #f87171 !important;
+}
+
+[data-bs-theme="dark"] .form-selectgroup-label {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .form-selectgroup-input:checked + .form-selectgroup-label {
+  background-color: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+[data-bs-theme="dark"] .input-group-text {
+  background-color: #374151;
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] code {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+[data-bs-theme="dark"] pre {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+[data-bs-theme="dark"] .dropdown-menu {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .dropdown-item {
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .dropdown-item:hover {
+  background-color: #374151;
+  color: var(--bs-body-color);
+}/*
+ 手機端優化 */
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 1.5rem 0;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.75rem;
+  }
+  
+  .hero-section p {
+    font-size: 0.9rem;
+  }
+  
+  .search-box .input-group {
+    flex-direction: column;
+  }
+  
+  .search-box .input-group-text {
+    border-radius: 0 0 0.375rem 0.375rem !important;
+  }
+  
+  .search-box .form-control {
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+    margin-bottom: -1px;
+  }
+  
+  .navbar-brand {
+    font-size: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .tool-icon i {
+    font-size: 2.5rem;
+  }
+  
+  .modal-dialog {
+    margin: 0;
+    height: 100vh;
+    max-width: 100vw;
+  }
+  
+  .modal-content {
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  
+  .btn-group-vertical .btn {
+    margin-bottom: 0.25rem;
+  }
+  
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .form-control,
+  .form-select {
+    font-size: 16px; /* 防止 iOS Safari 縮放 */
+  }
+}
+
+/* 平板端優化 */
+@media (min-width: 577px) and (max-width: 991px) {
+  .hero-section {
+    padding: 2.5rem 0;
+  }
+  
+  .hero-section h1 {
+    font-size: 2.25rem;
+  }
+  
+  .modal-xl {
+    max-width: 90vw;
+  }
+}
+
+/* 觸控設備優化 */
+@media (hover: none) and (pointer: coarse) {
+  .tool-card:hover {
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tool-card:active {
+    transform: scale(0.98);
+  }
+  
+  .btn {
+    min-height: 44px; /* 符合觸控目標大小 */
+  }
+  
+  .form-control,
+  .form-select {
+    min-height: 44px;
+  }
+}
+
+/* PWA 全螢幕模式 */
+@media (display-mode: standalone) {
+  .navbar {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .page {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* 深色模式下的 PWA 安裝提示 */
+[data-bs-theme="dark"] .pwa-install-banner .alert-info {
+  background-color: #1e3a8a;
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
+/* 改善深色模式下的可讀性 */
+[data-bs-theme="dark"] .text-muted {
+  color: #9ca3af !important;
+}
+
+[data-bs-theme="dark"] .form-hint,
+[data-bs-theme="dark"] small.text-muted {
+  color: #9ca3af !important;
+}
+
+/* 改善按鈕在深色模式下的對比度 */
+[data-bs-theme="dark"] .btn-outline-secondary {
+  color: #9ca3af;
+  border-color: #6b7280;
+}
+
+[data-bs-theme="dark"] .btn-outline-secondary:hover {
+  background-color: #6b7280;
+  border-color: #6b7280;
+  color: #ffffff;
+}
+
+/* 改善表格在深色模式下的顯示 */
+[data-bs-theme="dark"] .table-responsive {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+}
+
+/* 改善代碼區塊的顯示 */
+[data-bs-theme="dark"] .font-monospace {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+[data-bs-theme="dark"] textarea.font-monospace {
+  background-color: #1f2937;
+  border-color: var(--bs-border-color);
+  color: #e5e7eb;
+}
+
+[data-bs-theme="dark"] textarea.font-monospace:focus {
+  background-color: #1f2937;
+  border-color: #667eea;
+  color: #e5e7eb;
+}
+
+/* 導航欄按鈕樣式 */
+.btn-ghost-secondary {
+  color: #6c757d;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.btn-ghost-secondary:hover {
+  color: #495057;
+  background-color: rgba(108, 117, 125, 0.1);
+  border-color: rgba(108, 117, 125, 0.2);
+}
+
+.btn-ghost-secondary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+}
+
+[data-bs-theme="dark"] .btn-ghost-secondary {
+  color: #adb5bd;
+}
+
+[data-bs-theme="dark"] .btn-ghost-secondary:hover {
+  color: #e9ecef;
+  background-color: rgba(173, 181, 189, 0.1);
+  border-color: rgba(173, 181, 189, 0.2);
+}
+
+[data-bs-theme="dark"] .btn-ghost-secondary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(173, 181, 189, 0.25);
+}
+
+/* 確保按鈕在小螢幕上也能正常顯示 */
+@media (max-width: 576px) {
+  .navbar-nav .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* 改善一般模式下的背景色對比度 */
+.bg-light {
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
+}
+
+/* 確保 pre 和 code 區塊在一般模式下有足夠對比度 */
+pre.bg-dark {
+  background-color: #2d3748 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #4a5568;
+}
+
+/* 深色模式下的改進 */
+[data-bs-theme="dark"] .bg-light {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+[data-bs-theme="dark"] pre.bg-dark {
+  background-color: #1f2937 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #374151;
+}
+
+[data-bs-theme="dark"] .bg-secondary {
+  background-color: #6b7280 !important;
+  color: #f9fafb !important;
+}
+
+/* 改善 badge 在不同模式下的顯示 */
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-secondary {
+  background-color: #9ca3af !important;
+  color: #1f2937 !important;
+}
+
+/* 確保其他 badge 顏色在深色模式下也清晰 */
+[data-bs-theme="dark"] .badge.bg-blue {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-green {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-red {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-purple {
+  background-color: #8b5cf6 !important;
+  color: white !important;
+}
