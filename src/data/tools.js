@@ -3,10 +3,11 @@ export const tools = {
     {
       id: 'diff-checker',
       name: '文字差異比較',
-      description: '比較兩個文字檔案的差異',
+      description: "比較兩個文字內容的差異，靈感來源：<a href='https://www.diffchecker.com/text-compare/' target='_blank'>https://www.diffchecker.com/text-compare/</a>",
       icon: 'ti-file-diff',
       component: 'DiffChecker',
-      tags: ['diff', 'compare', 'text']
+      tags: ['diff', 'compare', 'text'],
+      badge: { text: '已完成', color: 'success' }
     },
     {
       id: 'regex-tester',
@@ -14,7 +15,8 @@ export const tools = {
       description: '用來測試所寫的正規表示法是否正確',
       icon: 'ti-regex',
       component: 'RegexTester',
-      tags: ['regex', 'pattern', 'test']
+      tags: ['regex', 'pattern', 'test'],
+      badge: { text: '尚未更新', color: 'danger' }      
     },
     {
       id: 'fluent-formatter',
@@ -22,7 +24,8 @@ export const tools = {
       description: '測試和格式化 Fluentd 正規表達式',
       icon: 'ti-regex',
       component: 'FluentFormatter',
-      tags: ['fluent', 'regex', 'log']
+      tags: ['fluent', 'regex', 'log'],
+      badge: { text: '稍後更新', color: 'primary' }     
     }    
   ],
   systemTools: [
@@ -32,7 +35,8 @@ export const tools = {
       description: '測試和驗證 cron 表達式',
       icon: 'ti-clock',
       component: 'CronParser',
-      tags: ['cron', 'schedule', 'time', 'crontab', 'cronjob']
+      tags: ['cron', 'schedule', 'time', 'crontab', 'cronjob'],
+      badge: { text: '稍後更新', color: 'primary' }    
     },
     {
       id: 'php-fpm-calc',
@@ -40,7 +44,8 @@ export const tools = {
       description: '計算 PHP-FPM 最佳配置',
       icon: 'ti-calculator',
       component: 'PhpFpmCalculator',
-      tags: ['php', 'fpm', 'performance']
+      tags: ['php', 'fpm', 'performance'],
+      badge: { text: '稍後更新', color: 'primary' }    
     },
     {
       id: 'nginx-formatter',
@@ -48,7 +53,8 @@ export const tools = {
       description: '格式化和美化 Nginx 配置檔',
       icon: 'ti-file-code',
       component: 'NginxFormatter',
-      tags: ['nginx', 'config', 'format']
+      tags: ['nginx', 'config', 'format'],
+      badge: { text: '稍後更新', color: 'primary' }    
     }
   ],
   networkTools: [
@@ -58,17 +64,19 @@ export const tools = {
       description: '計算 IP 子網路和 CIDR',
       icon: 'ti-network',
       component: 'IpCalculator',
-      tags: ['ip', 'subnet', 'cidr', 'network']
+      tags: ['ip', 'subnet', 'cidr', 'network'],
+      badge: { text: '正在更新', color: 'warning' }
     }
   ],
   securityTools: [
     {
       id: 'ssl-checker',
       name: 'SSL 憑證檢查',
-      description: '檢查 SSL 憑證資訊和有效性',
+      description: "檢查 SSL 憑證公鑰與私鑰是否正確匹配證公鑰與私鑰是否正確匹配，靈感來源：<a href='https://www.cloudmax.com.tw/service/ssl-tools' target='_blank'>https://www.cloudmax.com.tw/service/ssl-tools</a>",
       icon: 'ti-certificate',
       component: 'SslChecker',
-      tags: ['ssl', 'tls', 'certificate', 'security']
+      tags: ['ssl', 'tls', 'certificate', 'security'],
+      badge: { text: '已完成', color: 'success' }
     }
   ],
   devTools: [
@@ -78,7 +86,8 @@ export const tools = {
       description: '格式化和美化程式碼',
       icon: 'ti-code',
       component: 'CodeFormatter',
-      tags: ['code', 'format', 'beautify']
+      tags: ['code', 'format', 'beautify'],
+      badge: { text: '稍後更新', color: 'primary' }
     },
     {
       id: 'data-generator',
@@ -86,7 +95,8 @@ export const tools = {
       description: '產生測試用的假資料',
       icon: 'ti-database',
       component: 'DataGenerator',
-      tags: ['data', 'fake', 'generator', 'test']
+      tags: ['data', 'fake', 'generator', 'test'],
+      badge: { text: '稍後更新', color: 'primary' }
     }
   ]
 }

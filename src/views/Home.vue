@@ -5,10 +5,13 @@
       class="alert alert-info alert-dismissible mb-0 rounded-0 border-0"
       role="alert"
     >
-      <div class="container-xl">
+      <div class="container-fluid">
         <div class="d-flex align-items-center">
           <i class="ti ti-info-circle me-2"></i>
-          <span>目前網站還在開發調整中，有些功能尚未正常運作，敬請見諒。</span>
+          <span
+            >目前網站還在開發調整中，有些功能尚未正常運作(文字差異比較、SSL
+            憑證檢查已完成)，敬請見諒。</span
+          >
           <button
             type="button"
             class="btn-close ms-auto"
@@ -21,27 +24,37 @@
 
     <!-- Hero Section -->
     <div class="hero-section">
-      <div class="container-xl">
+      <div class="container-fluid">
         <div class="text-center">
           <h1 class="display-4 fw-bold mb-3">SRE 工具箱</h1>
           <p class="lead mb-4">
-            此工具集合了 SRE 日常會使用到的工具，全程都使用 Kiro
-            進行開發，僅微調 Bug 以及排版，歡迎大家使用。
+            此工具集合了 SRE
+            日常會使用到的工具(平常都需要開啟很多的不同網站，故想要將所有功能整合在一個頁面)，使用
+            Kiro 進行開發，僅微調 Bug 以及排版，歡迎大家使用。
           </p>
 
           <!-- Search Box -->
-          <div class="search-box">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control form-control-lm"
-                placeholder="搜尋工具..."
-                v-model="searchQuery"
-              />
-              <span class="input-group-text">
-                <i class="ti ti-search"></i>
-              </span>
-            </div>
+          <div
+            class="search-box mx-auto position-relative"
+            style="max-width: 600px"
+          >
+            <i
+              class="ti ti-search position-absolute"
+              style="
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 10;
+                opacity: 0.5;
+              "
+            ></i>
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              style="padding-left: 45px"
+              placeholder="搜尋工具..."
+              v-model="searchQuery"
+            />
           </div>
         </div>
       </div>
@@ -50,7 +63,7 @@
     <!-- Main Content -->
     <div class="page-wrapper">
       <div class="page-body">
-        <div class="container-xl">
+        <div class="container-fluid">
           <!-- 文字處理工具 -->
           <div
             class="category-section"

@@ -1,5 +1,20 @@
 <template>
   <div class="diff-checker">
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="d-flex justify-content-end gap-2 mb-2">
+          <button class="btn btn-outline-secondary" @click="swapTexts">
+            <i class="ti ti-arrows-exchange me-1"></i>
+            交換文字
+          </button>
+          <button class="btn btn-outline-danger" @click="clearTexts">
+            <i class="ti ti-trash me-1"></i>
+            清除全部
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
@@ -64,8 +79,8 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
+            <div class="row align-items-center g-3">
+              <div class="col-12 col-md-auto">
                 <div class="form-check form-switch">
                   <input
                     class="form-check-input"
@@ -76,7 +91,7 @@
                   <label class="form-check-label">顯示行號</label>
                 </div>
               </div>
-              <div class="col-auto">
+              <div class="col-12 col-md-auto">
                 <div class="form-check form-switch">
                   <input
                     class="form-check-input"
@@ -87,7 +102,7 @@
                   <label class="form-check-label">忽略空白字符</label>
                 </div>
               </div>
-              <div class="col-auto">
+              <div class="col-12 col-md-auto">
                 <div class="form-check form-switch">
                   <input
                     class="form-check-input"
@@ -98,44 +113,34 @@
                   <label class="form-check-label">忽略大小寫</label>
                 </div>
               </div>
-              <div class="col-auto">
-                <button class="btn btn-outline-secondary" @click="swapTexts">
-                  <i class="ti ti-arrows-exchange me-1"></i>
-                  交換文字
-                </button>
-              </div>
-              <div class="col-auto">
-                <button class="btn btn-outline-danger" @click="clearTexts">
-                  <i class="ti ti-trash me-1"></i>
-                  清除全部
-                </button>
-              </div>
-              <div class="col-auto ms-auto">
-                <label class="form-label me-2 mb-0">檢視模式:</label>
-                <div class="btn-group btn-group-sm" role="group">
-                  <input
-                    type="radio"
-                    class="btn-check"
-                    name="viewMode"
-                    id="unified"
-                    value="unified"
-                    v-model="viewMode"
-                  />
-                  <label class="btn btn-outline-primary" for="unified"
-                    >統一</label
-                  >
+              <div class="col-12 col-md-auto ms-md-auto">
+                <div class="d-flex align-items-center">
+                  <label class="form-label me-2 mb-0">檢視模式:</label>
+                  <div class="btn-group btn-group-sm" role="group">
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="viewMode"
+                      id="unified"
+                      value="unified"
+                      v-model="viewMode"
+                    />
+                    <label class="btn btn-outline-primary" for="unified"
+                      >統一</label
+                    >
 
-                  <input
-                    type="radio"
-                    class="btn-check"
-                    name="viewMode"
-                    id="split"
-                    value="split"
-                    v-model="viewMode"
-                  />
-                  <label class="btn btn-outline-primary" for="split"
-                    >分割</label
-                  >
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="viewMode"
+                      id="split"
+                      value="split"
+                      v-model="viewMode"
+                    />
+                    <label class="btn btn-outline-primary" for="split"
+                      >分割</label
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -183,17 +188,19 @@
             <div class="p-3 border-bottom">
               <div class="row">
                 <div class="col-auto">
-                  <span class="badge bg-green me-2"
+                  <span class="badge bg-green text-white me-2"
                     >+{{ stats.additions }}</span
                   >
                   <small class="text-muted">新增</small>
                 </div>
+                &nbsp;|&nbsp;&nbsp;
                 <div class="col-auto">
-                  <span class="badge bg-red me-2">-{{ stats.deletions }}</span>
+                  <span class="badge bg-red text-white me-2">-{{ stats.deletions }}</span>
                   <small class="text-muted">刪除</small>
                 </div>
+                &nbsp;|&nbsp;&nbsp;
                 <div class="col-auto">
-                  <span class="badge bg-blue me-2">{{ stats.changes }}</span>
+                  <span class="badge bg-blue text-white me-2">{{ stats.changes }}</span>
                   <small class="text-muted">修改</small>
                 </div>
               </div>
@@ -219,7 +226,7 @@
                 </div>
                 <div class="col-6">
                   <div class="p-2 bg-secondary text-white border-bottom">
-                    <strong>修改後文字</strong>
+                    <strong>比較文字</strong>
                   </div>
                   <pre
                     class="mb-0 p-2"
@@ -253,7 +260,7 @@ export default {
       ignoreWhitespace: false,
       ignoreCase: false,
       contextLines: 999,
-      viewMode: "unified",
+      viewMode: localStorage.getItem("diffCheckerViewMode") || "split",
       diffResult: null,
       stats: {
         additions: 0,
@@ -261,6 +268,11 @@ export default {
         changes: 0,
       },
     };
+  },
+  watch: {
+    viewMode(newValue) {
+      localStorage.setItem("diffCheckerViewMode", newValue);
+    },
   },
   computed: {
     isIdentical() {
@@ -656,8 +668,8 @@ export default {
   top: 0;
   bottom: 0;
   width: 50px;
-  background-color: #f8f9fa;
-  border-right: 1px solid #dee2e6;
+  background-color: var(--bs-gray-100);
+  border-right: 1px solid var(--bs-border-color);
   font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 13px;
   line-height: 1.4;
@@ -668,7 +680,7 @@ export default {
 
 .line-number {
   text-align: right;
-  color: #6c757d;
+  color: var(--bs-secondary);
   height: 19.6px;
   padding-right: 8px;
 }

@@ -1,23 +1,25 @@
 <template>
   <div class="tool-view">
-    <div class="container-xl py-4">
+    <div class="container-fluid py-4">
       <!-- 工具標題 -->
       <div class="row mb-4">
         <div class="col-12">
-          <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary me-3" @click="goBack">
-              <i class="ti ti-arrow-left me-1"></i>
-              返回
-            </button>
-            <div>
-              <h1 class="mb-1">
+          <div class="header-wrapper">
+            <div class="d-flex align-items-center mb-3">
+              <h1 class="mb-0 flex-grow-1">
                 <i :class="tool?.icon" class="me-2"></i>
                 {{ tool?.name }}
                 <small class="text-muted fs-5" v-if="toolGroup"
-                  >({{ toolGroup }})</small
+                  >/ {{ toolGroup }}</small
                 >
               </h1>
-              <p class="text-muted mb-0">&nbsp;&nbsp;{{ tool?.description }}</p>
+              <button class="btn btn-outline-secondary ms-3" @click="goBack">
+                <i class="ti ti-arrow-left me-1"></i>
+                返回
+              </button>
+            </div>
+            <div class="description-text">
+              <p class="text-muted mb-0" v-html="tool?.description || ''"></p>
             </div>
           </div>
         </div>
@@ -104,5 +106,20 @@ export default {
 <style scoped>
 .tool-view {
   min-height: calc(100vh - 200px);
+}
+
+.header-wrapper h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.description-text {
+  padding-left: 0.7rem;
+}
+
+@media (min-width: 768px) {
+  .header-wrapper h1 {
+    font-size: 2.5rem;
+  }
 }
 </style>
