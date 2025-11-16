@@ -32,11 +32,11 @@ export const tools = {
     {
       id: 'cron-parser',
       name: 'Cron 表達式解析',
-      description: '測試和驗證 cron 表達式',
+      description: "測試和檢查 Cron 表達式，靈感來源：<a href='https://www.cloudmax.com.tw/service/ssl-tools' target='_blank'>https://www.cloudmax.com.tw/service/ssl-tools</a>",
       icon: 'ti-clock',
       component: 'CronParser',
       tags: ['cron', 'schedule', 'time', 'crontab', 'cronjob'],
-      badge: { text: '稍後更新', color: 'primary' }    
+      badge: { text: '已完成', color: 'success' }   
     },
     {
       id: 'php-fpm-calc',
@@ -92,11 +92,11 @@ export const tools = {
     {
       id: 'data-generator',
       name: '測試資料產生器',
-      description: '產生測試用的假資料',
+      description: "產生測試用的假資料，靈感來源：<a href='https://generatedata.com/generator' target='_blank'>https://generatedata.com/generator</a>",
       icon: 'ti-database',
       component: 'DataGenerator',
       tags: ['data', 'fake', 'generator', 'test'],
-      badge: { text: '稍後更新', color: 'primary' }
+      badge: { text: '已完成', color: 'success' }
     }
   ]
 }

@@ -9,8 +9,7 @@
         <div class="d-flex align-items-center">
           <i class="ti ti-info-circle me-2"></i>
           <span
-            >目前網站還在開發調整中，有些功能尚未正常運作(文字差異比較、SSL
-            憑證檢查已完成)，敬請見諒。</span
+            >目前網站還在開發調整中，有些功能尚未正常運作(若已完成會標示已完成圖樣)，敬請見諒。</span
           >
           <button
             type="button"

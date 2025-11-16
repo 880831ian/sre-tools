@@ -109,7 +109,7 @@
                 </small>
               </div>
               <pre
-                class="bg-dark text-light p-3 rounded"
+                class="generated-output p-3"
                 style="max-height: 500px; overflow-y: auto"
               ><code>{{ generatedData }}</code></pre>
             </div>
@@ -132,6 +132,7 @@ export default {
       availableFields: [
         { key: "id", name: "ID", description: "唯一識別碼" },
         { key: "name", name: "姓名", description: "隨機中文姓名" },
+        { key: "englishName", name: "英文名字", description: "隨機英文名字" },
         { key: "email", name: "電子郵件", description: "隨機電子郵件地址" },
         { key: "phone", name: "電話號碼", description: "台灣手機號碼格式" },
         { key: "address", name: "地址", description: "台灣地址" },
@@ -161,8 +162,11 @@ export default {
       for (let i = 0; i < this.recordCount; i++) {
         const record = {};
 
-        this.selectedFields.forEach((field) => {
-          record[field] = this.generateFieldData(field, i + 1);
+        // 按照 availableFields 的順序來產生欄位
+        this.availableFields.forEach((field) => {
+          if (this.selectedFields.includes(field.key)) {
+            record[field.key] = this.generateFieldData(field.key, i + 1);
+          }
         });
 
         data.push(record);
@@ -176,6 +180,8 @@ export default {
           return index;
         case "name":
           return this.generateChineseName();
+        case "englishName":
+          return this.generateEnglishName();
         case "email":
           return this.generateEmail();
         case "phone":
@@ -231,11 +237,11 @@ export default {
         "馬",
         "羅",
       ];
-      const names = [
+      const nameChars = [
         "偉",
         "芳",
         "娜",
-        "秀英",
+        "英",
         "敏",
         "靜",
         "麗",
@@ -250,14 +256,108 @@ export default {
         "濤",
         "明",
         "超",
-        "秀蘭",
+        "蘭",
         "霞",
+        "華",
+        "文",
+        "志",
+        "建",
+        "國",
+        "秀",
+        "玉",
+        "雅",
+        "婷",
+        "宇",
+        "俊",
+        "豪",
+        "欣",
+        "怡",
+        "佳",
+        "宏",
+        "智",
+        "慧",
+        "美",
       ];
 
       const surname = surnames[Math.floor(Math.random() * surnames.length)];
-      const name = names[Math.floor(Math.random() * names.length)];
+      
+      // 隨機決定名字是 1 個字還是 2 個字（全名總共 2-3 個字）
+      const nameLength = Math.random() > 0.5 ? 1 : 2;
+      let name = "";
+      
+      for (let i = 0; i < nameLength; i++) {
+        name += nameChars[Math.floor(Math.random() * nameChars.length)];
+      }
 
       return surname + name;
+    },
+    generateEnglishName() {
+      const firstNames = [
+        "James",
+        "John",
+        "Robert",
+        "Michael",
+        "William",
+        "David",
+        "Richard",
+        "Joseph",
+        "Thomas",
+        "Charles",
+        "Mary",
+        "Patricia",
+        "Jennifer",
+        "Linda",
+        "Elizabeth",
+        "Barbara",
+        "Susan",
+        "Jessica",
+        "Sarah",
+        "Karen",
+        "Nancy",
+        "Lisa",
+        "Betty",
+        "Margaret",
+        "Sandra",
+        "Ashley",
+        "Kimberly",
+        "Emily",
+        "Donna",
+        "Michelle",
+      ];
+      const lastNames = [
+        "Smith",
+        "Johnson",
+        "Williams",
+        "Brown",
+        "Jones",
+        "Garcia",
+        "Miller",
+        "Davis",
+        "Rodriguez",
+        "Martinez",
+        "Hernandez",
+        "Lopez",
+        "Gonzalez",
+        "Wilson",
+        "Anderson",
+        "Thomas",
+        "Taylor",
+        "Moore",
+        "Jackson",
+        "Martin",
+        "Lee",
+        "Thompson",
+        "White",
+        "Harris",
+        "Clark",
+      ];
+
+      const firstName =
+        firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName =
+        lastNames[Math.floor(Math.random() * lastNames.length)];
+
+      return `${firstName} ${lastName}`;
     },
     generateEmail() {
       const domains = [
@@ -522,3 +622,29 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.generated-output {
+  background-color: #1a1a1a !important;
+  color: #f8f9fa !important;
+  border: none;
+  border-radius: 0.375rem;
+}
+
+.generated-output code {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+:global(.theme-dark) .generated-output {
+  background-color: #1a1a1a !important;
+  color: #f8f9fa !important;
+  border: none;
+  border-radius: 0.375rem;
+}
+
+:global(.theme-dark) .generated-output code {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+</style

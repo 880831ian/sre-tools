@@ -221,7 +221,7 @@
                   <tr>
                     <td>日期</td>
                     <td>1-31</td>
-                    <td>* , - / ?</td>
+                    <td>* , - /</td>
                     <td>每月的第幾天執行</td>
                   </tr>
                   <tr>
@@ -233,20 +233,20 @@
                   <tr>
                     <td>星期</td>
                     <td>0-7 或 SUN-SAT</td>
-                    <td>* , - / ?</td>
+                    <td>* , - /</td>
                     <td>每週的第幾天執行 (0和7都代表星期日)</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
+            <br />
             <h5>特殊字符說明</h5>
             <ul>
               <li><code>*</code> - 匹配所有值</li>
               <li><code>,</code> - 分隔多個值 (例: 1,3,5)</li>
               <li><code>-</code> - 指定範圍 (例: 1-5)</li>
               <li><code>/</code> - 指定間隔 (例: */5 表示每5個單位)</li>
-              <li><code>?</code> - 不指定值 (僅用於日期和星期欄位)</li>
             </ul>
 
             <h5>常用範例</h5>
@@ -370,8 +370,8 @@ export default {
     validateCronField(field, min, max, aliases = []) {
       if (!field || field.trim() === "") return false;
 
-      // 允許 * 和 ?
-      if (field === "*" || field === "?") return true;
+      // 允許 *
+      if (field === "*") return true;
 
       // 處理逗號分隔的值
       const parts = field.split(",");
@@ -496,68 +496,165 @@ export default {
         const month = this.parts.month;
         const weekday = this.parts.weekday;
 
-        let desc = "執行於 ";
-
-        // 分鐘
-        if (minute === "*") {
-          desc += "每分鐘";
-        } else if (minute.includes("/")) {
-          const interval = minute.split("/")[1];
-          desc += `每 ${interval} 分鐘`;
-        } else if (minute.includes(",")) {
-          desc += `第 ${minute} 分鐘`;
-        } else if (minute.includes("-")) {
-          desc += `第 ${minute} 分鐘`;
-        } else {
-          desc += `第 ${minute} 分鐘`;
-        }
-
-        // 小時
-        if (hour === "*") {
-          desc += "的每小時";
+        // 處理時間部分（小時:分鐘）
+        let timeDesc = "";
+        if (hour === "*" && minute === "*") {
+          timeDesc = "每分鐘";
+        } else if (hour === "*") {
+          if (minute.includes("/")) {
+            const interval = minute.split("/")[1];
+            timeDesc = `每 ${interval} 分鐘`;
+          } else if (minute.includes(",")) {
+            const minutes = minute.split(",").map((m) => m.padStart(2, "0"));
+            timeDesc = `每小時的第 ${minutes.join("、")} 分鐘`;
+          } else {
+            timeDesc = `每小時的第 ${minute.padStart(2, "0")} 分鐘`;
+          }
+        } else if (minute === "*") {
+          if (hour.includes("/")) {
+            const interval = hour.split("/")[1];
+            timeDesc = `每 ${interval} 小時`;
+          } else if (hour.includes(",")) {
+            timeDesc = `在 ${hour} 點的每分鐘`;
+          } else {
+            timeDesc = `在 ${hour} 點的每分鐘`;
+          }
         } else if (hour.includes("/")) {
+          // 小時有間隔，例如 */6
           const interval = hour.split("/")[1];
-          desc += `，每 ${interval} 小時`;
-        } else if (hour.includes(",")) {
-          desc += `，在 ${hour} 點`;
-        } else if (hour.includes("-")) {
-          desc += `，在 ${hour} 點之間`;
+          const minuteStr = minute === "0" ? "0" : minute.padStart(2, "0");
+          timeDesc = `在每 ${interval} 小時的第 ${minuteStr} 分鐘`;
         } else {
-          desc += `，${hour} 點`;
+          // 有具體的小時和分鐘
+          const hourStr = hour.includes(",")
+            ? hour
+            : hour.includes("-")
+            ? hour
+            : hour.padStart(2, "0");
+          const minuteStr = minute.includes(",")
+            ? minute
+            : minute.includes("-")
+            ? minute
+            : minute.padStart(2, "0");
+
+          if (hour.includes(",") || hour.includes("-")) {
+            timeDesc = `在 ${hourStr} 點的第 ${minuteStr} 分`;
+          } else if (minute.includes(",") || minute.includes("-")) {
+            timeDesc = `在 ${hourStr}:${minuteStr} 分`;
+          } else {
+            timeDesc = `在 ${hourStr}:${minuteStr}`;
+          }
         }
 
-        // 日期和星期
-        if (day !== "*" && weekday !== "*") {
-          desc += `，每月第 ${day} 天或每週第 ${weekday} 天`;
-        } else if (day !== "*") {
-          if (day.includes(",")) {
-            desc += `，每月第 ${day} 天`;
+        // 處理日期部分
+        let dateDesc = "";
+        // */1 等同於 *（每天）
+        const isEveryDay = day === "*" || day === "*/1";
+        const hasDay = !isEveryDay;
+        const hasWeekday = weekday !== "*";
+
+        if (hasDay && hasWeekday) {
+          dateDesc = `每月第 ${day} 天且為${this.formatWeekday(weekday)}`;
+        } else if (isEveryDay && hasWeekday) {
+          // 每天但只在特定星期執行
+          dateDesc = `${this.formatWeekday(weekday)}`;
+        } else if (hasDay) {
+          if (day === "1") {
+            dateDesc = "每月第一天";
+          } else if (day.includes(",")) {
+            dateDesc = `每月第 ${day} 天`;
           } else if (day.includes("-")) {
-            desc += `，每月第 ${day} 天`;
+            dateDesc = `每月第 ${day} 天`;
           } else {
-            desc += `，每月第 ${day} 天`;
+            dateDesc = `每月第 ${day} 天`;
           }
-        } else if (weekday !== "*") {
-          if (weekday === "1-5") {
-            desc += "，工作日";
-          } else if (weekday === "0" || weekday === "7") {
-            desc += "，星期日";
-          } else if (weekday === "6") {
-            desc += "，星期六";
+        } else if (hasWeekday) {
+          dateDesc = this.formatWeekday(weekday);
+        } else {
+          dateDesc = "每天";
+        }
+
+        // 處理月份部分
+        let monthDesc = "";
+        if (month !== "*") {
+          if (month.includes(",")) {
+            monthDesc = `在 ${this.formatMonth(month)} 月`;
+          } else if (month.includes("-")) {
+            const [start, end] = month.split("-");
+            monthDesc = `在 ${this.formatMonth(start)} 月到 ${this.formatMonth(
+              end
+            )} 月`;
           } else {
-            desc += `，每週第 ${weekday} 天`;
+            monthDesc = `在 ${this.formatMonth(month)} 月`;
           }
         }
 
-        // 月份
-        if (month !== "*") {
-          desc += `，第 ${month} 月`;
+        // 組合描述
+        let desc = timeDesc;
+
+        if (monthDesc) {
+          desc = `${desc}，${monthDesc}的${dateDesc}`;
+        } else {
+          desc = `${desc}，${dateDesc}`;
         }
 
         this.description = desc;
       } catch (e) {
         this.error = "無法解析 Cron 表達式";
       }
+    },
+
+    formatWeekday(weekday) {
+      const weekdayMap = {
+        0: "星期日",
+        1: "星期一",
+        2: "星期二",
+        3: "星期三",
+        4: "星期四",
+        5: "星期五",
+        6: "星期六",
+        7: "星期日",
+      };
+
+      if (weekday === "1-5") {
+        return "每週一到週五（工作日）";
+      } else if (weekday === "0,6" || weekday === "6,0") {
+        return "每週六和週日（週末）";
+      } else if (weekday.includes(",")) {
+        const days = weekday.split(",").map((d) => weekdayMap[d] || `第${d}天`);
+        return days.join("、");
+      } else if (weekday.includes("-")) {
+        const [start, end] = weekday.split("-");
+        return `每週${weekdayMap[start] || start}到${weekdayMap[end] || end}`;
+      } else {
+        return weekdayMap[weekday] || `每週第 ${weekday} 天`;
+      }
+    },
+
+    formatMonth(month) {
+      const monthMap = {
+        1: "一",
+        2: "二",
+        3: "三",
+        4: "四",
+        5: "五",
+        6: "六",
+        7: "七",
+        8: "八",
+        9: "九",
+        10: "十",
+        11: "十一",
+        12: "十二",
+      };
+
+      if (month.includes(",")) {
+        return month
+          .split(",")
+          .map((m) => monthMap[m] || m)
+          .join("、");
+      }
+
+      return monthMap[month] || month;
     },
 
     calculateNextRuns() {
@@ -594,9 +691,6 @@ export default {
     },
 
     getNextExecution(baseTime) {
-      // 更完整的 cron 執行時間計算
-      const nextTime = new Date(baseTime);
-
       // 解析各個部分
       const minute = this.parseCronValue(this.parts.minute, 0, 59);
       const hour = this.parseCronValue(this.parts.hour, 0, 23);
@@ -605,45 +699,104 @@ export default {
       const weekday = this.parseCronValue(this.parts.weekday, 0, 7);
 
       // 從當前時間的下一分鐘開始查找
-      nextTime.setSeconds(0, 0);
-      nextTime.setMinutes(nextTime.getMinutes() + 1);
+      let checkTime = new Date(baseTime);
+      checkTime.setSeconds(0, 0);
+      checkTime.setMinutes(checkTime.getMinutes() + 1);
 
-      // 最多查找未來 366 天
-      for (let days = 0; days < 366; days++) {
-        const checkTime = new Date(
-          nextTime.getTime() + days * 24 * 60 * 60 * 1000
-        );
+      // 最多查找未來 2 年（避免無限循環）
+      const maxIterations = 365 * 2 * 24 * 60; // 2年的分鐘數
+      let iterations = 0;
+
+      while (iterations < maxIterations) {
+        iterations++;
 
         // 檢查月份
         if (!this.matchesCronValue(checkTime.getMonth() + 1, month)) {
+          // 跳到下個月的第一天
+          checkTime.setMonth(checkTime.getMonth() + 1, 1);
+          checkTime.setHours(0, 0, 0, 0);
           continue;
         }
 
         // 檢查日期和星期（OR 關係）
-        const dayMatches = this.matchesCronValue(checkTime.getDate(), day);
-        const weekdayMatches = this.matchesCronValue(
-          checkTime.getDay(),
-          weekday
-        );
+        const dayMatches =
+          day.type === "all" || this.matchesCronValue(checkTime.getDate(), day);
+        const weekdayMatches =
+          weekday.type === "all" ||
+          this.matchesCronValue(checkTime.getDay(), weekday);
 
-        if (!dayMatches && !weekdayMatches) {
+        // 如果日期和星期都是 *，則匹配所有日期
+        // 如果只有日期指定（星期是 *），則只檢查日期
+        // 如果只有星期指定（日期是 *），則只檢查星期
+        // 如果兩者都指定，則需要滿足其中一個（OR）
+        let dayWeekdayMatch = false;
+        if (day.type === "all" && weekday.type === "all") {
+          dayWeekdayMatch = true;
+        } else if (day.type === "all") {
+          dayWeekdayMatch = weekdayMatches;
+        } else if (weekday.type === "all") {
+          dayWeekdayMatch = dayMatches;
+        } else {
+          dayWeekdayMatch = dayMatches || weekdayMatches;
+        }
+
+        if (!dayWeekdayMatch) {
+          // 跳到下一天
+          checkTime.setDate(checkTime.getDate() + 1);
+          checkTime.setHours(0, 0, 0, 0);
           continue;
         }
 
-        // 檢查小時和分鐘
-        for (let h = 0; h < 24; h++) {
-          if (!this.matchesCronValue(h, hour)) continue;
-
-          for (let m = 0; m < 60; m++) {
-            if (!this.matchesCronValue(m, minute)) continue;
-
-            const candidateTime = new Date(checkTime);
-            candidateTime.setHours(h, m, 0, 0);
-
-            if (candidateTime > baseTime) {
-              return candidateTime;
-            }
+        // 檢查小時
+        if (!this.matchesCronValue(checkTime.getHours(), hour)) {
+          // 跳到下一個匹配的小時
+          const nextHour = this.getNextMatchingValue(
+            checkTime.getHours(),
+            hour,
+            23
+          );
+          if (nextHour !== null && nextHour > checkTime.getHours()) {
+            checkTime.setHours(nextHour, 0, 0, 0);
+          } else {
+            // 跳到下一天的第一個匹配小時
+            checkTime.setDate(checkTime.getDate() + 1);
+            checkTime.setHours(0, 0, 0, 0);
           }
+          continue;
+        }
+
+        // 檢查分鐘
+        if (!this.matchesCronValue(checkTime.getMinutes(), minute)) {
+          // 跳到下一個匹配的分鐘
+          const nextMinute = this.getNextMatchingValue(
+            checkTime.getMinutes(),
+            minute,
+            59
+          );
+          if (nextMinute !== null && nextMinute > checkTime.getMinutes()) {
+            checkTime.setMinutes(nextMinute, 0, 0);
+          } else {
+            // 跳到下一個小時的第一個匹配分鐘
+            checkTime.setHours(checkTime.getHours() + 1, 0, 0, 0);
+          }
+          continue;
+        }
+
+        // 找到匹配的時間
+        return checkTime;
+      }
+
+      return null;
+    },
+
+    getNextMatchingValue(current, cronValue, max) {
+      if (cronValue.type === "all") {
+        return current;
+      }
+
+      for (const value of cronValue.values) {
+        if (value > current) {
+          return value;
         }
       }
 
@@ -656,33 +809,80 @@ export default {
       const values = [];
       const parts = value.split(",");
 
+      // 月份別名映射
+      const monthMap = {
+        JAN: 1,
+        FEB: 2,
+        MAR: 3,
+        APR: 4,
+        MAY: 5,
+        JUN: 6,
+        JUL: 7,
+        AUG: 8,
+        SEP: 9,
+        OCT: 10,
+        NOV: 11,
+        DEC: 12,
+      };
+
+      // 星期別名映射
+      const weekdayMap = {
+        SUN: 0,
+        MON: 1,
+        TUE: 2,
+        WED: 3,
+        THU: 4,
+        FRI: 5,
+        SAT: 6,
+      };
+
+      // 解析值（支持數字和別名）
+      const parseValueWithAlias = (val) => {
+        const num = parseInt(val);
+        if (!isNaN(num)) return num;
+
+        const upper = val.toUpperCase();
+        if (monthMap[upper] !== undefined) return monthMap[upper];
+        if (weekdayMap[upper] !== undefined) return weekdayMap[upper];
+
+        return null;
+      };
+
       for (const part of parts) {
         if (part.includes("/")) {
           const [range, step] = part.split("/");
           const stepNum = parseInt(step);
 
           if (range === "*") {
+            // */1 等同於 *，直接返回 all
+            if (stepNum === 1) {
+              return { type: "all" };
+            }
             for (let i = min; i <= max; i += stepNum) {
               values.push(i);
             }
           } else if (range.includes("-")) {
             const [start, end] = range.split("-");
-            const startNum = parseInt(start);
-            const endNum = parseInt(end);
-            for (let i = startNum; i <= endNum; i += stepNum) {
-              values.push(i);
+            const startNum = parseValueWithAlias(start);
+            const endNum = parseValueWithAlias(end);
+            if (startNum !== null && endNum !== null) {
+              for (let i = startNum; i <= endNum; i += stepNum) {
+                values.push(i);
+              }
             }
           }
         } else if (part.includes("-")) {
           const [start, end] = part.split("-");
-          const startNum = parseInt(start);
-          const endNum = parseInt(end);
-          for (let i = startNum; i <= endNum; i++) {
-            values.push(i);
+          const startNum = parseValueWithAlias(start);
+          const endNum = parseValueWithAlias(end);
+          if (startNum !== null && endNum !== null) {
+            for (let i = startNum; i <= endNum; i++) {
+              values.push(i);
+            }
           }
         } else {
-          const num = parseInt(part);
-          if (!isNaN(num)) {
+          const num = parseValueWithAlias(part);
+          if (num !== null) {
             values.push(num);
           }
         }

@@ -28,8 +28,7 @@
           <div class="col-12 col-lg-auto mt-3 mt-lg-0">
             <ul class="list-inline list-inline-dots mb-0">
               <li class="list-inline-item">
-                Made with ❤️ for <a href="https://pin-yi.me">Pin-Yi</a> & Kiro
-                xD
+                開發人員：<a href="https://pin-yi.me">Pin-Yi</a> & Kiro
               </li>
             </ul>
           </div>
@@ -51,6 +50,10 @@ export default {
   components: {
     PwaInstallPrompt,
     DarkModeToggle,
+  },
+  mounted() {
+    // 頁面載入時滾動到頂部（包含重新整理的情況）
+    window.scrollTo(0, 0);
   },
 };
 </script>

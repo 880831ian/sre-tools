@@ -129,7 +129,3 @@ MIT License
 ## 🤝 貢獻
 
 歡迎提交 Issue 和 Pull Request！
-
----
-
-Made with ❤️ for SRE Engineers
