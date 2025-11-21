@@ -36,8 +36,10 @@ logs
 coverage
 .nyc_output
 
-# 其他
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# 文檔
 README.md
 DEPLOYMENT.md
-docker-compose.yml
-.dockerignore

@@ -57,6 +57,7 @@ import CronParser from "../components/tools/CronParser.vue";
 import PhpFpmCalculator from "../components/tools/PhpFpmCalculator.vue";
 import NginxFormatter from "../components/tools/NginxFormatter.vue";
 import IpCalculator from "../components/tools/IpCalculator.vue";
+import EksCniCalculator from "../components/tools/EksCniCalculator.vue";
 import SslChecker from "../components/tools/SslChecker.vue";
 import CodeFormatter from "../components/tools/CodeFormatter.vue";
 import DataGenerator from "../components/tools/DataGenerator.vue";
@@ -71,6 +72,7 @@ export default {
     PhpFpmCalculator,
     NginxFormatter,
     IpCalculator,
+    EksCniCalculator,
     SslChecker,
     CodeFormatter,
     DataGenerator,

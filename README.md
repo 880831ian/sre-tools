@@ -4,30 +4,18 @@
 
 ## 🚀 快速開始
 
-### 使用 Docker（推薦）
-
-```bash
-# 使用 Docker Compose
-docker compose up -d
-
-# 或使用 Docker 命令
-docker build -t sre-tools .
-docker run -d -p 3000:8080 --name sre-tools sre-tools
-```
-
-訪問 http://localhost:3000
-
-### 本地開發
-
 ```bash
 # 安裝依賴
 npm install
 
-# 啟動開發服務器
+# 啟動開發服務器（預設在 http://localhost:3000）
 npm run dev
 
 # 構建生產版本
 npm run build
+
+# 預覽生產版本
+npm run preview
 ```
 
 ## 🛠️ 工具列表
@@ -47,6 +35,7 @@ npm run build
 ### 網路工具
 
 - **IP 子網路計算器** - 計算 IP 子網路和 CIDR 資訊
+- **EKS CNI 計算器** - 計算 AWS EKS 集群的 CNI 容量和 IP 需求
 
 ### 安全工具
 
@@ -65,34 +54,44 @@ npm run build
 - ⚡ **離線功能** - Service Worker 快取
 - 🔒 **隱私保護** - 所有處理都在前端進行
 
-## 🐳 Docker 部署
+## 🚀 部署
 
-### 生產環境
+### 靜態網站託管（推薦）
+
+構建後的 `dist` 目錄可以直接部署到任何靜態網站託管服務：
 
 ```bash
-# 1. 克隆項目
-git clone <your-repo>
-cd sre-tools-website
+# 構建生產版本
+npm run build
 
-# 2. 構建並啟動
-docker compose up -d
-
-# 3. 查看狀態
-docker-compose ps
-docker-compose logs -f
+# dist 目錄可以部署到：
+# - Vercel
+# - Netlify
+# - GitHub Pages
+# - Firebase Hosting
+# - 任何支援靜態網站的伺服器
 ```
 
-### 自定義配置
+### Docker 部署（用於 CI/CD）
 
-修改 `docker-compose.yml` 中的設置：
+```bash
+# 構建 Docker 映像
+docker build -t sre-tools:latest .
 
-```yaml
-services:
-  sre-tools:
-    ports:
-      - "80:8080" # 修改端口
-    environment:
-      - NODE_ENV=production
+# 運行容器
+docker run -d -p 8080:80 --name sre-tools sre-tools:latest
+```
+
+詳細的 CI/CD 整合範例請參考 `DEPLOYMENT.md`。
+
+### 傳統伺服器部署
+
+```bash
+# 構建項目
+npm run build
+
+# 將 dist 目錄內容複製到 web 伺服器根目錄
+cp -r dist/* /var/www/html/
 ```
 
 ## 🔧 技術棧
