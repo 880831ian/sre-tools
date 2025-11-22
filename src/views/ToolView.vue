@@ -97,10 +97,65 @@ export default {
     },
   },
   mounted() {
-    // 設置頁面標題
+    // 設置頁面標題和 SEO meta tags
     if (this.tool) {
-      document.title = `${this.tool.name} - SRE 工具箱`;
+      const seoTitle = this.tool.seo?.title || `${this.tool.name} - SRE 工具箱`;
+      const seoDescription =
+        this.tool.seo?.description || this.tool.description;
+      const seoKeywords = this.tool.seo?.keywords || this.tool.tags?.join(", ");
+
+      document.title = seoTitle;
+
+      // 更新或創建 meta description
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (!metaDescription) {
+        metaDescription = document.createElement("meta");
+        metaDescription.name = "description";
+        document.head.appendChild(metaDescription);
+      }
+      metaDescription.content = seoDescription;
+
+      // 更新或創建 meta keywords
+      let metaKeywords = document.querySelector('meta[name="keywords"]');
+      if (!metaKeywords) {
+        metaKeywords = document.createElement("meta");
+        metaKeywords.name = "keywords";
+        document.head.appendChild(metaKeywords);
+      }
+      metaKeywords.content = seoKeywords;
+
+      // 更新 Open Graph tags
+      this.updateMetaTag("property", "og:title", seoTitle);
+      this.updateMetaTag("property", "og:description", seoDescription);
+      this.updateMetaTag("property", "og:url", window.location.href);
+
+      // 更新 Twitter Card tags
+      this.updateMetaTag("name", "twitter:title", seoTitle);
+      this.updateMetaTag("name", "twitter:description", seoDescription);
+
+      // 更新 canonical URL
+      let canonical = document.querySelector('link[rel="canonical"]');
+      if (!canonical) {
+        canonical = document.createElement("link");
+        canonical.rel = "canonical";
+        document.head.appendChild(canonical);
+      }
+      canonical.href = window.location.href;
     }
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/");
+    },
+    updateMetaTag(attr, attrValue, content) {
+      let meta = document.querySelector(`meta[${attr}="${attrValue}"]`);
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute(attr, attrValue);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    },
   },
 };
 </script>

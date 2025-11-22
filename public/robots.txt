@@ -1,0 +1,9 @@
+# robots.txt for SRE Tools
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sre.pin-yi.me/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
