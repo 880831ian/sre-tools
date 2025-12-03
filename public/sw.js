@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sre-tools-v1'
+const CACHE_NAME = 'sre-tools-v1.1'
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,6 +10,9 @@ const urlsToCache = [
 ]
 
 self.addEventListener('install', (event) => {
+  // 強制跳過等待，立即激活新的 Service Worker
+  self.skipWaiting()
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -49,15 +52,46 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.addEventListener('activate', (event) => {
+  // 立即控制所有客戶端
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName)
-          }
-        })
-      )
-    })
+    Promise.all([
+      // 清除舊緩存
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              return caches.delete(cacheName)
+            }
+          })
+        )
+      }),
+      // 立即接管所有頁面
+      self.clients.claim()
+    ])
   )
+})
+
+// 監聽來自客戶端的消息
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+  
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            return caches.delete(cacheName)
+          })
+        )
+      }).then(() => {
+        return self.clients.matchAll()
+      }).then((clients) => {
+        clients.forEach(client => {
+          client.postMessage({ type: 'CACHE_CLEARED' })
+        })
+      })
+    )
+  }
 })

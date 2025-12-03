@@ -1,5 +1,8 @@
 <template>
   <div class="page">
+    <!-- Pull to Refresh -->
+    <PullToRefresh />
+
     <!-- Header -->
     <header class="navbar navbar-expand-md navbar-light d-print-none">
       <div class="container-fluid">
@@ -44,12 +47,14 @@
 <script>
 import PwaInstallPrompt from "./components/PwaInstallPrompt.vue";
 import DarkModeToggle from "./components/DarkModeToggle.vue";
+import PullToRefresh from "./components/PullToRefresh.vue";
 
 export default {
   name: "App",
   components: {
     PwaInstallPrompt,
     DarkModeToggle,
+    PullToRefresh,
   },
   mounted() {
     // 頁面載入時滾動到頂部（包含重新整理的情況）

@@ -37,16 +37,7 @@
             class="search-box mx-auto position-relative"
             style="max-width: 600px"
           >
-            <i
-              class="ti ti-search position-absolute"
-              style="
-                left: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                z-index: 10;
-                opacity: 0.5;
-              "
-            ></i>
+            <i class="ti ti-search position-absolute search-icon"></i>
             <input
               type="text"
               class="form-control form-control-lg"
@@ -234,3 +225,26 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.search-icon {
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  color: var(--tblr-body-color);
+  opacity: 0.6;
+}
+
+/* 淺色模式 */
+:root:not([data-bs-theme="dark"]) .search-icon {
+  color: #000;
+  opacity: 0.5;
+}
+
+/* 深色模式 */
+[data-bs-theme="dark"] .search-icon {
+  color: #fff;
+  opacity: 0.7;
+}
+</style>
