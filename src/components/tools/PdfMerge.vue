@@ -42,10 +42,22 @@
                 class="d-flex justify-content-between align-items-center mb-3"
               >
                 <h5 class="mb-0">已上傳的檔案 ({{ pdfFiles.length }})</h5>
-                <button class="btn btn-sm btn-outline-danger" @click="clearAll">
-                  <i class="ti ti-trash me-1"></i>
-                  清除全部
-                </button>
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    @click="expandAllPages"
+                  >
+                    <i class="ti ti-chevrons-down me-1"></i>
+                    展開全部頁面
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    @click="clearAll"
+                  >
+                    <i class="ti ti-trash me-1"></i>
+                    清除全部
+                  </button>
+                </div>
               </div>
 
               <div class="pdf-files-list">
@@ -58,7 +70,7 @@
                   <template #item="{ element, index }">
                     <div class="pdf-file-item">
                       <div class="file-header">
-                        <div class="d-flex align-items-center flex-grow-1">
+                        <div class="file-header-row">
                           <i
                             class="ti ti-grip-vertical drag-handle me-2"
                             style="cursor: move; font-size: 1.5rem"
@@ -67,32 +79,50 @@
                             class="ti ti-file-text me-2"
                             style="font-size: 1.5rem; color: #dc3545"
                           ></i>
-                          <div class="flex-grow-1">
-                            <strong class="file-name">{{
-                              element.name
-                            }}</strong>
-                            <br />
-                            <small class="file-info"
-                              >{{ formatFileSize(element.size) }} ·
-                              {{ element.pageCount }} 頁</small
-                            >
+                          <div class="flex-grow-1 min-width-0">
+                            <div class="file-name">{{ element.name }}</div>
+                            <div class="file-info">
+                              {{ formatFileSize(element.size) }} ·
+                              {{
+                                element.isEncrypted
+                                  ? "0 頁"
+                                  : `${element.pageCount} 頁`
+                              }}
+                            </div>
                           </div>
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="file-header-actions">
                           <button
+                            v-if="!element.isEncrypted"
                             class="btn btn-sm btn-outline-primary"
                             @click="togglePageSelection(index)"
                           >
                             <i class="ti ti-list me-1"></i>
-                            選擇頁面
+                            <span class="btn-text">選擇頁面</span>
                           </button>
                           <button
                             class="btn btn-sm btn-outline-danger"
                             @click="removeFile(index)"
                           >
-                            <i class="ti ti-trash"></i>
+                            <i class="ti ti-trash me-1"></i>
+                            <span class="btn-text">移除</span>
                           </button>
                         </div>
+                      </div>
+
+                      <!-- 加密 PDF 警告 -->
+                      <div
+                        v-if="element.isEncrypted"
+                        class="alert alert-warning mt-3 mb-0"
+                      >
+                        <i class="ti ti-lock me-2"></i>
+                        此 PDF 檔案已加密，需要先解鎖才可以合併。
+                        <router-link
+                          to="/tools/pdf-unlock"
+                          class="alert-link ms-1"
+                        >
+                          前往 PDF 解鎖工具
+                        </router-link>
                       </div>
 
                       <div
@@ -120,42 +150,65 @@
                             </button>
                           </div>
                         </div>
-                        <div class="page-thumbnails">
-                          <div
-                            v-for="page in element.pageCount"
-                            :key="page"
-                            class="page-thumbnail"
-                            :class="{
-                              selected: element.selectedPages.includes(page),
-                            }"
-                            @click="togglePage(index, page)"
-                          >
-                            <img
-                              v-if="pageThumbnails[`${element.id}-${page}`]"
-                              :src="pageThumbnails[`${element.id}-${page}`]"
-                              :alt="`第 ${page} 頁`"
-                              class="thumbnail-img"
-                            />
-                            <div v-else class="thumbnail-loading">
-                              <div
-                                class="spinner-border spinner-border-sm"
-                              ></div>
-                            </div>
-                            <div class="page-number">
-                              <span
-                                class="badge bg-dark"
-                                style="color: white"
-                                >{{ page }}</span
-                              >
-                            </div>
+                        <draggable
+                          v-model="element.pageOrder"
+                          item-key="pageNum"
+                          class="page-thumbnails"
+                          :animation="200"
+                          @end="onPageDragEnd(index)"
+                        >
+                          <template #item="{ element: pageItem }">
                             <div
-                              v-if="element.selectedPages.includes(page)"
-                              class="selected-overlay"
+                              class="page-thumbnail"
+                              :class="{
+                                selected: element.selectedPages.includes(
+                                  pageItem.pageNum
+                                ),
+                              }"
+                              @click="togglePage(index, pageItem.pageNum)"
                             >
-                              <i class="ti ti-check-circle"></i>
+                              <div class="page-drag-handle">
+                                <i class="ti ti-grip-vertical"></i>
+                              </div>
+                              <img
+                                v-if="
+                                  pageThumbnails[
+                                    `${element.id}-${pageItem.pageNum}`
+                                  ]
+                                "
+                                :src="
+                                  pageThumbnails[
+                                    `${element.id}-${pageItem.pageNum}`
+                                  ]
+                                "
+                                :alt="`第 ${pageItem.pageNum} 頁`"
+                                class="thumbnail-img"
+                              />
+                              <div v-else class="thumbnail-loading">
+                                <div
+                                  class="spinner-border spinner-border-sm"
+                                ></div>
+                              </div>
+                              <div class="page-number">
+                                <span
+                                  class="badge bg-dark"
+                                  style="color: white"
+                                  >{{ pageItem.pageNum }}</span
+                                >
+                              </div>
+                              <div
+                                v-if="
+                                  element.selectedPages.includes(
+                                    pageItem.pageNum
+                                  )
+                                "
+                                class="selected-overlay"
+                              >
+                                <i class="ti ti-check-circle"></i>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                          </template>
+                        </draggable>
                       </div>
                     </div>
                   </template>
@@ -237,7 +290,9 @@ export default {
   },
   computed: {
     hasSelectedPages() {
-      return this.pdfFiles.some((file) => file.selectedPages.length > 0);
+      return this.pdfFiles.some(
+        (file) => !file.isEncrypted && file.selectedPages.length > 0
+      );
     },
   },
   methods: {
@@ -259,8 +314,24 @@ export default {
       for (const file of files) {
         try {
           const arrayBuffer = await file.arrayBuffer();
-          const pdfDoc = await PDFDocument.load(arrayBuffer);
-          const pageCount = pdfDoc.getPageCount();
+          let pdfDoc;
+          let isEncrypted = false;
+          let pageCount = 0;
+
+          try {
+            pdfDoc = await PDFDocument.load(arrayBuffer);
+            pageCount = pdfDoc.getPageCount();
+          } catch (err) {
+            // 檢查是否為加密錯誤
+            if (
+              err.message.includes("encrypted") ||
+              err.message.includes("password")
+            ) {
+              isEncrypted = true;
+            } else {
+              throw err;
+            }
+          }
 
           const fileId = this.nextId++;
 
@@ -271,12 +342,20 @@ export default {
             file: file,
             arrayBuffer: arrayBuffer,
             pageCount: pageCount,
-            selectedPages: Array.from({ length: pageCount }, (_, i) => i + 1),
+            selectedPages: isEncrypted
+              ? []
+              : Array.from({ length: pageCount }, (_, i) => i + 1),
+            pageOrder: Array.from({ length: pageCount }, (_, i) => ({
+              pageNum: i + 1,
+            })),
             showPageSelection: false,
+            isEncrypted: isEncrypted,
           });
 
-          // 生成縮圖
-          await this.generateThumbnails(fileId, arrayBuffer, pageCount);
+          // 只有非加密檔案才生成縮圖
+          if (!isEncrypted && pageCount > 0) {
+            await this.generateThumbnails(fileId, arrayBuffer, pageCount);
+          }
         } catch (err) {
           this.error = `無法讀取 ${file.name}：${err.message}`;
         }
@@ -322,6 +401,13 @@ export default {
       this.success = false;
       this.mergedPdfBytes = null;
     },
+    expandAllPages() {
+      this.pdfFiles.forEach((file) => {
+        if (!file.isEncrypted) {
+          file.showPageSelection = true;
+        }
+      });
+    },
     togglePageSelection(index) {
       this.pdfFiles[index].showPageSelection =
         !this.pdfFiles[index].showPageSelection;
@@ -349,6 +435,11 @@ export default {
     onDragEnd() {
       // 拖曳結束後的處理（如果需要）
     },
+    onPageDragEnd(fileIndex) {
+      // 頁面拖曳結束後，更新選中的頁面順序
+      const file = this.pdfFiles[fileIndex];
+      // 保持選中狀態，但順序已經由 draggable 更新
+    },
     async mergePdfs() {
       if (!this.hasSelectedPages) return;
 
@@ -367,12 +458,15 @@ export default {
           const freshArrayBuffer = await file.file.arrayBuffer();
           const pdfDoc = await PDFDocument.load(freshArrayBuffer);
 
-          for (const pageNum of file.selectedPages) {
-            const [copiedPage] = await mergedPdf.copyPages(pdfDoc, [
-              pageNum - 1,
-            ]);
-            mergedPdf.addPage(copiedPage);
-            this.mergedPageCount++;
+          // 使用 pageOrder 的順序，但只合併選中的頁面
+          for (const pageItem of file.pageOrder) {
+            if (file.selectedPages.includes(pageItem.pageNum)) {
+              const [copiedPage] = await mergedPdf.copyPages(pdfDoc, [
+                pageItem.pageNum - 1,
+              ]);
+              mergedPdf.addPage(copiedPage);
+              this.mergedPageCount++;
+            }
           }
         }
 
@@ -433,7 +527,7 @@ export default {
 .pdf-files-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .pdf-file-item {
@@ -442,6 +536,7 @@ export default {
   padding: 1rem;
   background-color: #fff;
   transition: all 0.3s;
+  margin-bottom: 0.5rem;
 }
 
 .pdf-file-item:hover {
@@ -450,8 +545,64 @@ export default {
 
 .file-header {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.file-header-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.min-width-0 {
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
+}
+
+.file-info {
+  font-size: 0.875rem;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.file-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.file-header-actions .btn {
+  flex: 1;
+}
+
+/* 桌面版佈局 */
+@media (min-width: 768px) {
+  .file-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .file-header-row {
+    flex: 1;
+  }
+
+  .file-header-actions {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .file-header-actions .btn {
+    flex: 0 0 auto;
+  }
 }
 
 .drag-handle {
@@ -479,10 +630,29 @@ export default {
   border: 2px solid #dee2e6;
   border-radius: 8px;
   overflow: hidden;
-  cursor: pointer;
+  cursor: move;
   transition: all 0.3s;
   background-color: #fff;
   aspect-ratio: 1 / 1.414; /* A4 比例 */
+}
+
+.page-drag-handle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 1rem;
+  z-index: 10;
+  cursor: move;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.page-thumbnail:hover .page-drag-handle {
+  opacity: 1;
 }
 
 .page-thumbnail:hover {
@@ -592,6 +762,11 @@ export default {
 }
 
 [data-bs-theme="dark"] .upload-title {
+  color: #e0e0e0;
+}
+
+[data-bs-theme="dark"] .page-drag-handle {
+  background-color: rgba(255, 255, 255, 0.2);
   color: #e0e0e0;
 }
 </style>
