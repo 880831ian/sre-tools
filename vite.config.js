@@ -8,7 +8,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}'],
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 // 4MB
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
@@ -42,6 +43,17 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['vue', 'vue-router'],
+          'pdf': ['pdf-lib', 'pdfjs-dist', '@cantoo/pdf-lib'],
+          'crypto': ['node-forge']
+        }
+      }
+    }
+  },
   server: {
     port: 3000,
     open: true
