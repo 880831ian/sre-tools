@@ -162,6 +162,26 @@
               </div>
             </div>
           </div>
+
+          <!-- PDF 工具 -->
+          <div
+            class="category-section"
+            v-if="filteredTools.pdfTools.length > 0"
+          >
+            <h2 class="mb-4">
+              <i class="ti ti-file-type-pdf me-2"></i>
+              PDF 工具
+            </h2>
+            <div class="row">
+              <div
+                v-for="tool in filteredTools.pdfTools"
+                :key="tool.id"
+                class="col-sm-6 col-lg-4 mb-4"
+              >
+                <ToolCard :tool="tool" @open-tool="openTool" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

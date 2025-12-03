@@ -61,6 +61,8 @@ import EksCniCalculator from "../components/tools/EksCniCalculator.vue";
 import SslChecker from "../components/tools/SslChecker.vue";
 import CodeFormatter from "../components/tools/CodeFormatter.vue";
 import DataGenerator from "../components/tools/DataGenerator.vue";
+import PdfUnlock from "../components/tools/PdfUnlock.vue";
+import PdfMerge from "../components/tools/PdfMerge.vue";
 
 export default {
   name: "ToolView",
@@ -76,6 +78,8 @@ export default {
     SslChecker,
     CodeFormatter,
     DataGenerator,
+    PdfUnlock,
+    PdfMerge,
   },
   props: {
     toolId: {

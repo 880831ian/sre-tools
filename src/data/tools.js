@@ -151,6 +151,34 @@ export const tools = {
         keywords: 'data generator, fake data, test data, mock data, 測試資料, faker, 假資料產生'
       }
     }
+  ],
+  pdfTools: [
+    {
+      id: 'pdf-unlock',
+      name: 'PDF 解密',
+      description: '線上 PDF 解密工具，移除 PDF 檔案的密碼保護。支援移除開啟密碼和權限密碼，讓您可以自由編輯、列印和複製 PDF 內容。所有處理都在瀏覽器本地完成，確保檔案安全。靈感來源：<a href="https://www.ilovepdf.com/zh-tw/unlock_pdf" target="_blank">iLovePDF</a>',
+      component: 'PdfUnlock',
+      tags: ['pdf', 'unlock', 'decrypt', 'password', 'pdf 解密', 'pdf 解鎖', '移除密碼'],
+      badge: { text: '已完成', color: 'success' },
+      seo: {
+        title: 'PDF 解密工具 - 移除 PDF 密碼保護',
+        description: '免費的線上 PDF 解密工具，快速移除 PDF 密碼保護。支援移除開啟密碼和權限密碼，所有處理在本地完成，確保安全。',
+        keywords: 'pdf unlock, pdf 解密, pdf 解鎖, 移除 pdf 密碼, pdf password remover, pdf decrypt'
+      }
+    },
+    {
+      id: 'pdf-merge',
+      name: 'PDF 合併',
+      description: '強大的 PDF 合併工具，支援多個 PDF 檔案合併。可以選擇特定頁面、調整頁面順序、拖曳排序。提供即時預覽功能，讓您精確控制合併結果。所有處理都在瀏覽器本地完成。靈感來源：<a href="https://www.ilovepdf.com/zh-tw/merge_pdf" target="_blank">iLovePDF</a>',
+      component: 'PdfMerge',
+      tags: ['pdf', 'merge', 'combine', 'join', 'pdf 合併', 'pdf 結合', '合併 pdf'],
+      badge: { text: '已完成', color: 'success' },
+      seo: {
+        title: 'PDF 合併工具 - 線上合併多個 PDF 檔案',
+        description: '免費的 PDF 合併工具，支援多檔案合併、選擇頁面、拖曳排序。提供即時預覽，所有處理在本地完成，確保安全。',
+        keywords: 'pdf merge, pdf 合併, 合併 pdf, pdf combine, pdf join, merge pdf files'
+      }
+    }
   ]
 }
 
@@ -167,7 +195,8 @@ export function getToolGroup(id) {
     systemTools: '系統工具',
     networkTools: '網路工具',
     securityTools: '安全工具',
-    devTools: '開發工具'
+    devTools: '開發工具',
+    pdfTools: 'PDF 工具'
   }
   
   for (const [groupKey, groupTools] of Object.entries(tools)) {
